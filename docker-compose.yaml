@@ -1,0 +1,30 @@
+version: '3.3'
+
+services:
+  db:
+    image: postgres:13
+    environment:
+      POSTGRES_USER: someusername
+      POSTGRES_PASSWORD: somepassword
+      POSTGRES_DB: converterdb
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  app:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_USER: someusername
+      DB_PASSWORD: somepassword
+      DB_NAME: converterdb
+    ports:
+      - "3000:3000"
+    command: ["./main"]
+
+volumes:
+  postgres_data:
