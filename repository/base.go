@@ -1,5 +1,7 @@
 package repository
 
-type Aggregator struct {
+var Aggregator AggregatorImpl
+
+type AggregatorImpl struct {
 	RequestRepository
 }
