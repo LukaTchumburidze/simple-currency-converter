@@ -20,7 +20,7 @@ services:
       DB_HOST: db
       DB_PORT: 5432
       DB_USER: someusername
-      DB_PASSWORD: somepassword
+      DB_PASS: somepassword
       DB_NAME: converterdb
     ports:
       - "3000:3000"
