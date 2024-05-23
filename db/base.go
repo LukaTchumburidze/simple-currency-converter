@@ -3,6 +3,7 @@ package db
 import (
 	"fmt"
 	"github.com/LukaTchumburidze/simple-currency-converter/cfg"
+	"github.com/LukaTchumburidze/simple-currency-converter/entity"
 	"github.com/LukaTchumburidze/simple-currency-converter/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
@@ -23,4 +24,14 @@ func init() {
 		panic("failed to connect database")
 	}
 	log.Logger.Info("connected to database")
+
+	err = DB.AutoMigrate(&entity.Request{})
+	if err != nil {
+		panic(err)
+	}
+	err = DB.AutoMigrate(&entity.Request{})
+	if err != nil {
+		panic(err)
+	}
+	log.Logger.Info("migration finished")
 }
