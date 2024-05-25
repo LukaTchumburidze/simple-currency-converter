@@ -27,10 +27,12 @@ func init() {
 
 	err = DB.AutoMigrate(&entity.Request{})
 	if err != nil {
+		log.Logger.Error("failed on request entity creation")
 		panic(err)
 	}
-	err = DB.AutoMigrate(&entity.Request{})
+	err = DB.AutoMigrate(&entity.Response{})
 	if err != nil {
+		log.Logger.Error("failed on response entity creation")
 		panic(err)
 	}
 	log.Logger.Info("migration finished")

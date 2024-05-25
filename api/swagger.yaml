@@ -1,0 +1,83 @@
+openapi: 3.0.0
+info:
+  title: Currency Conversion API
+  version: 1.0.0
+paths:
+  /convert:
+    post:
+      summary: Convert currency from base to target
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                BaseCurrency:
+                  type: string
+                  description: The ISO 4217 code of the base currency
+                  example: USD
+                  pattern: '^[A-Z]{3}$'
+                TargetCurrency:
+                  type: string
+                  description: The ISO 4217 code of the target currency
+                  example: EUR
+                  pattern: '^[A-Z]{3}$'
+                Amount:
+                  type: number
+                  format: float
+                  description: The amount of base currency to convert
+                  example: 100.0
+                  minimum: 0
+              required:
+                - BaseCurrency
+                - TargetCurrency
+                - Amount
+      responses:
+        '200':
+          description: Successfully converted currency amount
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  Amount:
+                    type: number
+                    format: float
+                    description: The converted amount in target currency
+                    example: 85.0
+                    minimum: 0
+components:
+  schemas:
+    CurrencyRequest:
+      type: object
+      properties:
+        BaseCurrency:
+          type: string
+          description: The ISO 4217 code of the base currency
+          example: USD
+          pattern: '^[A-Z]{3}$'
+        TargetCurrency:
+          type: string
+          description: The ISO 4217 code of the target currency
+          example: EUR
+          pattern: '^[A-Z]{3}$'
+        Amount:
+          type: number
+          format: float
+          description: The amount of base currency to convert
+          example: 100.0
+          minimum: 0
+      required:
+        - BaseCurrency
+        - TargetCurrency
+        - Amount
+    CurrencyResponse:
+      type: object
+      properties:
+        Amount:
+          type: number
+          format: float
+          description: The converted amount in target currency
+          example: 85.0
+          minimum: 0
