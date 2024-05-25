@@ -1,7 +1,6 @@
 package middleware
 
 import (
-	"encoding/json"
 	"fmt"
 	"github.com/LukaTchumburidze/simple-currency-converter/entity"
 	"github.com/LukaTchumburidze/simple-currency-converter/repository"
@@ -15,27 +14,20 @@ func responseMiddleware(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	headers, err := json.Marshal(ctx.Response().Header.Header())
-	if err != nil {
-		return err
-	}
-	body, err := json.Marshal(ctx.Response().Body())
-	if err != nil {
-		return err
-	}
-	requestId, err := strconv.ParseUint(fmt.Sprintf("%s", ctx.Locals(requestKey)), 10, 32)
+	requestId, err := strconv.ParseUint(fmt.Sprintf("%d", ctx.Locals(RequestIDKey)), 10, 32)
 	if err != nil {
 		return err
 	}
 
 	_, err = repository.Aggregator.ResponseRepository.StoreResponse(entity.Response{
+		Status:    ctx.Response().StatusCode(),
 		RequestID: uint(requestId),
-		Headers:   string(headers),
-		Body:      string(body),
+		Headers:   string(ctx.Response().Header.Header()),
+		Body:      string(ctx.Response().Body()),
 	})
 	if err != nil {
 		return err
 	}
 
-	return ctx.Next()
+	return nil
 }

@@ -9,6 +9,6 @@ type ResponseRepository struct {
 }
 
 func (r ResponseRepository) StoreResponse(response entity.Response) (entity.Response, error) {
-	err := db.DB.Create(response).Find(&response).Error
+	err := db.DB.Create(&response).Find(&response).Error
 	return response, err
 }

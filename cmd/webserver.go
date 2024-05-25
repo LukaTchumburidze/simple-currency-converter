@@ -10,8 +10,8 @@ import (
 func Execute() {
 	app := fiber.New()
 
-	route.AddPublicRoutes(app)
 	middleware.AddMiddlewares(app)
+	route.AddPublicRoutes(app)
 
 	log.Logger.Info("Starting server on port 3000")
 	err := app.Listen(":3000")

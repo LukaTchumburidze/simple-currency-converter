@@ -2,82 +2,83 @@ openapi: 3.0.0
 info:
   title: Currency Conversion API
   version: 1.0.0
+  description: API for converting currency from one type to another
 paths:
   /convert:
     post:
       summary: Convert currency from base to target
+      parameters:
+        - name: base_currency
+          in: query
+          required: true
+          schema:
+            type: string
+            description: The ISO 4217 code of the base currency
+            example: USD
+            pattern: '^[A-Z]{3}$'
+        - name: target_currency
+          in: query
+          required: true
+          schema:
+            type: string
+            description: The ISO 4217 code of the target currency
+            example: EUR
+            pattern: '^[A-Z]{3}$'
       requestBody:
         required: true
         content:
           application/json:
             schema:
-              type: object
-              properties:
-                BaseCurrency:
-                  type: string
-                  description: The ISO 4217 code of the base currency
-                  example: USD
-                  pattern: '^[A-Z]{3}$'
-                TargetCurrency:
-                  type: string
-                  description: The ISO 4217 code of the target currency
-                  example: EUR
-                  pattern: '^[A-Z]{3}$'
-                Amount:
-                  type: number
-                  format: float
-                  description: The amount of base currency to convert
-                  example: 100.0
-                  minimum: 0
-              required:
-                - BaseCurrency
-                - TargetCurrency
-                - Amount
+              $ref: '#/components/schemas/CurrencyRequest'
       responses:
         '200':
           description: Successfully converted currency amount
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  Amount:
-                    type: number
-                    format: float
-                    description: The converted amount in target currency
-                    example: 85.0
-                    minimum: 0
+                $ref: '#/components/schemas/CurrencyResponse'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
 components:
   schemas:
     CurrencyRequest:
       type: object
       properties:
-        BaseCurrency:
-          type: string
-          description: The ISO 4217 code of the base currency
-          example: USD
-          pattern: '^[A-Z]{3}$'
-        TargetCurrency:
-          type: string
-          description: The ISO 4217 code of the target currency
-          example: EUR
-          pattern: '^[A-Z]{3}$'
-        Amount:
+        amount:
           type: number
           format: float
           description: The amount of base currency to convert
           example: 100.0
           minimum: 0
       required:
-        - BaseCurrency
-        - TargetCurrency
-        - Amount
+        - amount
     CurrencyResponse:
       type: object
       properties:
-        Amount:
+        amount:
           type: number
           format: float
           description: The converted amount in target currency
           example: 85.0
           minimum: 0
+      required:
+        - amount
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error message
+          example: Invalid input
+      required:
+        - error

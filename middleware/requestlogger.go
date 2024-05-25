@@ -1,14 +1,14 @@
 package middleware
 
 import (
-	"fmt"
 	"github.com/LukaTchumburidze/simple-currency-converter/entity"
 	"github.com/LukaTchumburidze/simple-currency-converter/repository"
 	"github.com/LukaTchumburidze/simple-currency-converter/request"
 	"github.com/gofiber/fiber/v2"
 )
 
-const requestKey = "request"
+const RequestIDKey = "request"
+const CurrencyKey = "currency"
 
 func requestMiddleware(ctx *fiber.Ctx) error {
 	var currency request.Currency
@@ -17,17 +17,15 @@ func requestMiddleware(ctx *fiber.Ctx) error {
 		return err
 	}
 
-	headers := fmt.Sprintf("%s", ctx.Request().Header.Header())
-	body := fmt.Sprintf("%s", ctx.Request().Body())
-
 	storedRequest, err := repository.Aggregator.RequestRepository.StoreRequest(entity.Request{
-		Headers: headers,
-		Body:    body,
+		Headers: string(ctx.Request().Header.Header()),
+		Body:    string(ctx.Request().Body()),
 	})
 	if err != nil {
 		return err
 	}
-	ctx.Locals(requestKey, storedRequest)
+	ctx.Locals(RequestIDKey, storedRequest.ID)
+	ctx.Locals(CurrencyKey, currency)
 
 	return ctx.Next()
 }
